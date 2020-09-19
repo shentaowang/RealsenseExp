@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
     parser.add_argument("--start_frame", type=int, default=70, help="frame to start")
     parser.add_argument("--end_frame", type=int, default=476, help="frame to start")
-    parser.add_argument("--data_dir", type=str, default="data/exp/2020-09-14-14-54-09", help="data dir"
+    parser.add_argument("--data_dir", type=str, default="data/exp/2020-09-19-10-37-46", help="data dir"
                                                                                     " contain the image and pickle")
 
     # init the model
@@ -53,7 +53,9 @@ if __name__ == "__main__":
     img_list = [i for i in img_list if ".jpg" in i]
     img_list = sorted(img_list)
     for img_file in img_list:
-        if int(img_file.split(".")[0]) < opt.start_frame or int(img_file.split(".")[0]) > opt.end_frame:
+        frame_id = int(img_file.split("-")[0])
+        frame_timestamp = float(img_file.split("-")[1][:-4])
+        if frame_id < opt.start_frame or frame_id > opt.end_frame:
             continue
 
         color_image = cv2.imread(os.path.join(opt.data_dir, img_file))
@@ -92,10 +94,10 @@ if __name__ == "__main__":
                 cv2.putText(img, str("%.2f" % float(conf)), (x2, y2 - box_h), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                             color, 2)
                 print("dist: {}".format(depth_image[int(y1+box_h//2), int(x1+box_w//2)]))
-            fout.write("{:.2f}\n".format(depth_image[int(y1_s+y2_s)//2, int(x1_s+x2_s)//2]))
+            fout.write("{:.4f}\t{:.2f}\n".format(frame_timestamp, depth_image[int(y1_s+y2_s)//2, int(x1_s+x2_s)//2]))
         else:
             print("lost")
-            fout.write("{}\n".format(-1))
+            fout.write("{:.4f}\t{}\n".format(frame_timestamp, -1))
         cv2.imshow("RGB", img)
         cv2.imshow("depth", depth_colormap)
         key = cv2.waitKey(1)

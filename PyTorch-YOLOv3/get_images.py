@@ -9,7 +9,7 @@ import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--save", default=False, action='store_true', help="if save the video")
+    parser.add_argument("--save", default=True, action='store_true', help="if save the video")
     opt = parser.parse_args()
     # init the camerae
     pipeline = rs.pipeline()
@@ -55,8 +55,9 @@ if __name__ == "__main__":
             cv2.imshow("RGB", color_image)
             cv2.imshow("depth", depth_colormap)
             if opt.save:
-                cv2.imwrite(os.path.join(out_dir, "{:0>6d}.jpg".format(cnt)), color_image)
-                with open(os.path.join(out_dir, "{:0>6d}.pickle".format(cnt)), 'wb') as fout:
+                save_time = time.time()
+                cv2.imwrite(os.path.join(out_dir, "{:0>6d}-{:.4f}.jpg".format(cnt, save_time)), color_image)
+                with open(os.path.join(out_dir, "{:0>6d}-{:.4f}.pickle".format(cnt, save_time)), 'wb') as fout:
                     pickle.dump(depth_image, fout)
 
             key = cv2.waitKey(1)
