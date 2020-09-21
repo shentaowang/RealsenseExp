@@ -74,10 +74,10 @@ if __name__ == "__main__":
             detections = model(imgTensor)
             detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres)[0]
         if detections is None:
+            print("lost")
+            fout.write("{:.4f}\t{}\n".format(frame_timestamp, -1))
             continue
         detections = rescale_boxes(detections, opt.img_size, RGBimg.shape[:2])
-        unique_labels = detections[:, -1].cpu().unique()
-        n_cls_preds = len(unique_labels)
         img = color_image.copy()
         detections = [i for i in detections if i[6] == 39]
         if len(detections) != 0:

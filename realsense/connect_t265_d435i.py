@@ -2,6 +2,8 @@ import pyrealsense2 as rs
 import numpy as np
 import os
 
+# cannot work
+
 ctx = rs.context()
 devices = ctx.query_devices()
 align = rs.align(rs.stream.color)
