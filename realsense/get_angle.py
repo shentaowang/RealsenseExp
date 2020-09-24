@@ -11,6 +11,7 @@ import argparse
 import message_filters
 import cv2
 import matplotlib.pyplot as plt
+from autolab_core import RigidTransform
 
 
 class CWaitForMessage:
